@@ -1,0 +1,41 @@
+# Ignore everything by default
+*
+
+# But include directories (needed for git to traverse)
+!*/
+
+
+# Include specific file types
+!*.py
+!*.ipynb
+!*.sh
+!.gitignore
+!*.md
+
+# Explicitly ignore these directories and everything inside them
+other_codes/
+codes_binary/
+codes_binary_comparison/
+codes_vs/
+data/
+
+
+# Include dataset directory and all its contents
+!dataset/
+!dataset/**
+#not this huge one though
+dataset/all_remaining_negatives.pickle
+
+# Include params directory and all its contents
+!experiments/models_params
+!experiments/models_params/**
+
+!model_weights/
+!model_weights/**
+
+!human_transcriptome_predictions/
+!human_transcriptome_predictions/**
+
+!overview.png
+!test.fasta
+!.gitattributes

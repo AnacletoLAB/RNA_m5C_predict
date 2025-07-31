@@ -1,0 +1,25 @@
+{
+    "global_params": {
+        "base_seed": 42,
+        "batch_size": 32,
+        "criterion": "CrossEntropyLoss",
+        "dataset": "sampler",
+        "embed": "one_hot",
+        "kmer": 1,
+        "learning_rate": 0.0001,
+        "optimizer": "AdamW",
+        "scheduler": "ReduceLROnPlateau",
+        "seq_len": 51,
+        "weight_decay": 1e-05
+    },
+    "model": "Transformer",
+    "model_params": {
+        "embed": "one_hot",
+        "embed_dim": 600,
+        "head_type": "average_attention",
+        "kmer": 1,
+        "num_blocks": 4,
+        "num_heads": 20,
+        "seq_len": 51
+    }
+}

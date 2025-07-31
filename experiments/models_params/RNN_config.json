@@ -1,0 +1,28 @@
+{
+    "global_params": {
+        "base_seed": 42,
+        "batch_size": 16,
+        "criterion": "CrossEntropyLoss",
+        "dataset": "random",
+        "embed": "one_hot",
+        "kmer": 1,
+        "learning_rate": 1e-05,
+        "optimizer": "AdamW",
+        "scheduler": "ReduceLROnPlateau",
+        "seq_len": 51,
+        "weight_decay": 1e-05
+    },
+    "model": "RNN",
+    "model_params": {
+        "bidirectional": true,
+        "dropout": 0.1,
+        "embed": "one_hot",
+        "embed_dim": 128,
+        "hidden_dim": 256,
+        "kmer": 1,
+        "num_layers": 3,
+        "pooling": "central_attention",
+        "rnn_type": "GRU",
+        "seq_len": 51
+    }
+}

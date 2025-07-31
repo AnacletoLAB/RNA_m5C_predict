@@ -1,0 +1,8 @@
+# Treat notebooks as Python
+*.ipynb linguist-language=Python
+
+# If notebooks are mostly exploratory/documentation
+*.ipynb linguist-documentation=true
+
+# Reduce their weight in language detection
+*.ipynb linguist-vendored=false
