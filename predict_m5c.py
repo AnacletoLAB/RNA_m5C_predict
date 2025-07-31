@@ -31,13 +31,117 @@ python predict_rna_modifications.py --fasta_file sample.fasta --batch_size 128 -
 ```
 """
 
-from experiments.models.RNNClassifier import RNNClassifier
+
 from pathlib import Path
 import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import math
 import argparse
 import pandas as pd
 from typing import List, Tuple, Dict
 import sys
+
+
+
+###############################################################################
+# 0. We define the architecture of the heavy hard negative mining model, which is a Bi-GRU with central weighted pooling.
+###############################################################################
+
+class MLP(nn.Module):
+    def __init__(self, input_dim, num_classes=5, mid_dim=None, dropout=0.1):
+        super().__init__()
+        mid_dim = max(128, input_dim // 2) if mid_dim is None else mid_dim
+        self.mlp = nn.Sequential(
+            nn.Linear(input_dim, mid_dim, bias=False),
+            nn.GELU(),
+            nn.Dropout(dropout),
+            nn.Linear(mid_dim, num_classes)
+        )
+
+    def forward(self, pooled):
+        return self.mlp(pooled)
+
+
+class BI_GRU(nn.Module):
+    
+    def __init__(
+        self,
+        embed_dim=128,
+        hidden_dim=256,
+        num_layers=3,
+        num_classes=5,
+        dropout=0.1,
+        seq_len=51,
+        kmer=1,
+
+    ):
+        super().__init__()
+        self.embed_dim = embed_dim
+        self.hidden_dim = hidden_dim
+        self.num_layers = num_layers
+        self.num_classes = num_classes
+        self.dropout_p = dropout
+        self.kmer = kmer
+
+        self.seq_len = seq_len - kmer + 1
+
+
+        self.input_channels = 4**kmer
+        self.input_proj = nn.Linear(self.input_channels, embed_dim, bias=False)
+
+        rnn_cls = nn.GRU
+        self.rnn_layers = nn.ModuleList()
+        in_dim = embed_dim
+        for _ in range(num_layers):
+            self.rnn_layers.append(
+                rnn_cls(
+                    input_size   = in_dim,
+                    hidden_size  = hidden_dim,
+                    num_layers   = 1,
+                    batch_first  = True,
+                    bidirectional= True,
+                    dropout      = 0 #we do one layer at a time for masking
+                )
+            )
+            in_dim = hidden_dim * 2 
+
+        self.final_rnn_dim = in_dim
+
+        self.inter_layer_drop = nn.Dropout(p=dropout)
+        self.att_proj = nn.Linear(self.final_rnn_dim, self.seq_len)
+        self.mlp = MLP(input_dim=self.final_rnn_dim, num_classes=self.num_classes)
+
+            
+    def forward(self, x):
+
+        valid_mask = (x.abs().sum(-1) != 0) #shape: (batch_size, seq_len)
+
+        x = self.input_proj(x)
+
+        for i, rnn in enumerate(self.rnn_layers):
+            x, _ = rnn(x)
+            x    = x.masked_fill(~valid_mask.unsqueeze(-1), 0.0)
+            if i < len(self.rnn_layers) - 1:   # skip last layer
+                x = self.inter_layer_drop(x)   # custom dropout here
+
+
+        central_idx = self.seq_len // 2
+        center_output = x[:, central_idx, :]
+        central = self.att_proj(center_output) 
+        central = F.gelu(central)
+        central[:, central_idx] = float("-inf")
+        central = central.masked_fill(~valid_mask, float("-inf"))
+        attention_weights = torch.softmax(central, dim=1)
+        pooled = (x * attention_weights.unsqueeze(2)).sum(dim=1)
+
+
+        logits = self.mlp(pooled)
+
+        return logits
+
+
+
 
 ###############################################################################
 # 1. Argument parsing
@@ -63,22 +167,9 @@ if not path_weights.exists():
 
 device = torch.device("cpu" if args.cpu or not torch.cuda.is_available() else "cuda")
 
-params_model = {
-    "embed_dim": 128,
-    "hidden_dim": 256,
-    "num_layers": 3,
-    "num_classes": 5,
-    "rnn_type": "GRU",
-    "bidirectional": True,
-    "dropout": 0.1,
-    "pooling": "central_attention",
-    "seq_len": 51,
-    "kmer": 1,
-    "embed": "one_hot",
-}
 
 print("\nLoading model …", file=sys.stderr)
-model = RNNClassifier(**params_model)
+model = BI_GRU()
 model.load_state_dict(torch.load(path_weights, map_location="cpu"))
 model.to(device).eval()
 print(f"Model loaded on {device}.", file=sys.stderr)
@@ -111,7 +202,7 @@ def read_fasta(path: Path) -> List[Tuple[str, str]]:
 ###############################################################################
 # 4. Window generation around cytosines (C)
 ###############################################################################
-WINDOW = params_model["seq_len"]
+WINDOW = 51
 HALF = WINDOW // 2
 ALLOWED = set("ACGT")
 PADDING_CHAR = "P"
