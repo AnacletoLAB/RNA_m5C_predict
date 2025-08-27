@@ -36,6 +36,6 @@ dataset/all_remaining_negatives.pickle
 !human_transcriptome_predictions/
 !human_transcriptome_predictions/**
 
-!overview.pdf
+!overview.png
 !test.fasta
 !.gitattributes
