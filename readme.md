@@ -13,12 +13,13 @@ This repository accompanies **Saitto *********************************et al.**
 ## What’s inside
 
 ```
-📂 dataset/         # training/validation data
-📂 experiments/     # training + analysis code
+📂 dataset/              # training/validation data
+📂 experiments/          # training + analysis code
+📂 experiments/models    # code of the Bi-GRU, CNN and Transformer models to predict m5C RNA modifications
 📂 human_transcriptome_predictions/     # dataframe with predicted m5Cs across human trascriptome
-📂 model_weights/   # final Bi‑GRU checkpoint (heavy hard‑negative mining)
-predict_m5c.py      # ← run this to predict new samples
-test.fasta          # tiny example FASTA for a smoke test
+📂 model_weights/        # final Bi‑GRU checkpoint (heavy hard‑negative mining)
+predict_m5c.py           # ← run this to predict new samples
+test.fasta               # tiny example FASTA for a smoke test
 ```
 
 ---
