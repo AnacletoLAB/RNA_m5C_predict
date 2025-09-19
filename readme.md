@@ -4,9 +4,10 @@
 
 ![Pipeline overview](overview.png)
 End‑to‑end pipeline for writer‑resolved m5C prediction.
-**(1) Reconstruction of an m5C high-confidence catalog**. The 45\,500 bisulfite calls} are lifted over, mapped to GENCODE v19 and cytosines on methylated transcripts are split into methylated (turquoise) and unmethylated (orange). Nine STREME runs plus manual curation yield four writer motifs (Type I–IV, boxed). PFM‑based rescoring removes BS‑seq artifacts, random negatives are added from the same transcripts and redundancy filtering produces a 26\,300×2 non‑redundant corpus. **(2) Model Training and Inference**. A five‑fold CV grid search (Bi‑GRU, CNN, Transformer) selects Bi‑GRU as the best model. Its false‑positive calls on around 10 million held‑out cytosines are harvested as hard negatives, redundancy-filtered and merged into an augmented training set, then re‑trained and deployed transcriptome‑wide. **(3) Resources**. The resulting writer‑specific prediction database, with refined motifs and coherent secondary‑structure profiles are released for community use. In this repository we further provide a standalone Python tool for m\textsuperscript{5}C prediction given FASTA files as described below.
+**(a) Construction of an m5C high-confidence catalog**. The 45\,500 bisulfite calls} are lifted over, mapped to GENCODE v19 and cytosines on methylated transcripts are split into methylated (turquoise) and unmethylated (orange). Nine STREME runs plus manual curation yield four writer motifs (Type I–IV, boxed). PFM‑based rescoring removes BS‑seq artifacts, random negatives are added from the same transcripts and redundancy filtering produces a 26\,300×2 non‑redundant corpus. **(b) Model Training and Inference**. A five‑fold CV grid search (Bi‑GRU, CNN, Transformer) selects Bi‑GRU as the best model. Its false‑positive calls on around 10 million held‑out cytosines are harvested as hard negatives, redundancy-filtered and merged into an augmented training set, then re‑trained and deployed transcriptome‑wide. **(c) Resources**. The resulting writer‑specific prediction database, with refined motifs and coherent secondary‑structure profiles are released for community use. In this repository we further provide a standalone Python tool for m5C prediction given FASTA files as described below.
 
-This repository accompanies **Saitto *********************************et al.********************************* 2025** (manuscript in prep.)  &#x20;
+This repository accompanies: *AI methods and biologically informed data curation enable accurate RNA m⁵C prediction*  
+Saitto *et al.*, 2025 (preprint on bioRxiv)  &#x20;
 
 ---
 
@@ -124,7 +125,7 @@ Data DOI: https://doi.org/10.5281/zenodo.16629378
 
 ## Citation
 
-> Saitto *et al.* **Hard negative mining reveals the decisive role of data quality over model complexity in RNA m5C prediction.** 2025. DOI: **10.XXXX/placeholder‑doi**
-
+> Saitto *et al.* **AI methods and biologically informed data curation enable accurate RNA m5C prediction.** 2025. 
+> DOI: **10.XXXX/placeholder‑doi**
 
 ---
