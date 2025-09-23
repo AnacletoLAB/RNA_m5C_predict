@@ -8,6 +8,7 @@ End‑to‑end pipeline for writer‑resolved m5C prediction.
 
 This repository accompanies: *AI methods and biologically informed data curation enable accurate RNA m⁵C prediction*  
 Saitto *et al.*, 2025 (preprint on bioRxiv)  &#x20;
+DOI: [10.1101/2025.09.22.677824](https://doi.org/10.1101/2025.09.22.677824)
 
 ---
 
@@ -96,11 +97,13 @@ sequence_id | position | Type (unmodified/I/II/III/IV) | p. unmodified | p. I | 
 | -------------------------------- | --------------------------------------------------------- | ----- | ------------------------------------------------------------ |
 | **GitHub** (`human_transcriptome_predictions/`) | `m5C_predictions.tsv.gz`                                  | 4 MB  | Quick download; small enough for the repo.                   |
 | **Zenodo**                       | `m5C_predictions.tsv.gz` <br> *(same checksum as GitHub)* | 4 MB  | Archival copy with DOI for citation; long‑term preservation. |
-| *(optional)* Zenodo              | `m5C_predictions.xlsx`                                    | 16 MB | Excel version for bench biologists (exported from the TSV).  |
+| *(optional)* **Zenodo**              | `m5C_predictions.xlsx`                                    | 16 MB | Excel version for bench biologists (exported from the TSV).  |
+
+Data available at: [https://doi.org/10.5281/zenodo.16629378](https://doi.org/10.5281/zenodo.16629378)
 
 ### Dataset description
 
-This dataset provides **transcriptome‑wide predictions of RNA 5‑methyl‑cytosine (m⁵C) sites** for the human reference transcriptome (GENCODE v45, GRCh38). Predictions were generated with the Bi‑GRU model described in **Saitto *et al.* 2025**.
+This dataset provides **transcriptome‑wide predictions of RNA 5‑methyl‑cytosine (m⁵C) sites** for the human reference transcriptome (GENCODE v45, GRCh38).
 
 Each row corresponds to a cytosine residue predicted to be methylated and contains:
 
@@ -110,22 +113,13 @@ Each row corresponds to a cytosine residue predicted to be methylated and contai
 * **`probability`:** posterior probability assigned by the model (rounded to 4 decimals).
 * **`in_train_or_test_sets`:** `TRUE` if the 51‑nt window centred on this cytosine was present in the training *or* validation sets; `FALSE` otherwise.
 
-File formats:
-
-* **`m5C_predictions.tsv.gz`** – tab‑separated, UTF‑8, gzip‑compressed (4 MB).
-* **`m5C_predictions.xlsx`** – Excel workbook with identical content (25 MB).
-
-
-
-```text
-Data DOI: https://doi.org/10.5281/zenodo.16629378
-```
-
 ---
 
 ## Citation
 
-> Saitto *et al.* **AI methods and biologically informed data curation enable accurate RNA m5C prediction.** 2025. 
-> DOI: **10.XXXX/placeholder‑doi**
+> Saitto, E., Casiraghi, E., Paccanaro, A. & Valentini, G.  
+> **AI methods and biologically informed data curation enable accurate RNA m5C prediction.**  
+> *bioRxiv* (September 2025).  
+> DOI: [10.1101/2025.09.22.677824](https://doi.org/10.1101/2025.09.22.677824)
 
 ---
